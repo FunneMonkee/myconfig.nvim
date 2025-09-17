@@ -565,39 +565,39 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
         rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+        -- ... etc. see `:help lspconfig-all` for a list of all the pre-configured lsps
         --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
+        -- some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- but for many setups, the lsp (`tsserver`) will work just fine
         -- tsserver = {},
         --
         jdtls = {
           cmd = {
             'java',
-            '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-            '-Dosgi.bundles.defaultStartLevel=4',
-            '-Declipse.product=org.eclipse.jdt.ls.core.product',
-            '-Dlog.protocol=true',
-            '-Dlog.level=ALL',
-            '-Xmx2048m',
-            '--add-modules=ALL-SYSTEM',
+            '-declipse.application=org.eclipse.jdt.ls.core.id1',
+            '-dosgi.bundles.defaultstartlevel=4',
+            '-declipse.product=org.eclipse.jdt.ls.core.product',
+            '-dlog.protocol=true',
+            '-dlog.level=all',
+            '-xmx2048m',
+            '--add-modules=all-system',
             '--add-opens',
-            'java.base/java.util=ALL-UNNAMED',
+            'java.base/java.util=all-unnamed',
             '--add-opens',
-            'java.base/java.lang=ALL-UNNAMED',
+            'java.base/java.lang=all-unnamed',
             '-javaagent:' .. require('mason-registry').get_package('jdtls'):get_install_path() .. '/lombok.jar',
             '-jar',
-            '/Users/lmpinto/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.6.800.v20240330-1250.jar',
+            '/users/lmpinto/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.6.800.v20240330-1250.jar',
             '-configuration',
-            '/Users/lmpinto/.local/share/nvim/mason/packages/jdtls/config_mac',
+            '/users/lmpinto/.local/share/nvim/mason/packages/jdtls/config_mac',
             '-data',
-            '/Users/lmpinto/.local/share/eclipse/report-creator',
+            '/users/lmpinto/.local/share/eclipse/report-creator',
           },
           root_dir = vim.fs.dirname(vim.fs.find({ 'gradlew', '.git', 'mvnw' }, { upward = true })[1]),
         },
@@ -607,30 +607,30 @@ require('lazy').setup({
           -- filetypes = { ...},
           -- capabilities = {},
           settings = {
-            Lua = {
+            lua = {
               completion = {
-                callSnippet = 'Replace',
+                callsnippet = 'replace',
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+              -- you can toggle below to ignore lua_ls's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
       }
 
-      -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
+      -- ensure the servers and tools above are installed
+      --  to check the current status of installed tools and/or manually install
       --  other tools, you can run
-      --    :Mason
+      --    :mason
       --
-      --  You can press `g?` for help in this menu.
+      --  you can press `g?` for help in this menu.
       require('mason').setup()
 
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
+      -- you can add other tools here that you want mason to install
+      -- for you, so that they are available from within neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua', -- used to format lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -638,9 +638,9 @@ require('lazy').setup({
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for tsserver)
+            -- this handles overriding only values explicitly passed
+            -- by the server configuration above. useful when disabling
+            -- certain features of an lsp (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
@@ -668,7 +668,10 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, java = true }
+        local disable_filetypes = { --c = true,
+          cpp = true,
+          java = true,
+        }
         return {
           timeout_ms = 500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -676,6 +679,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        c = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
