@@ -577,30 +577,7 @@ require('lazy').setup({
         -- but for many setups, the lsp (`tsserver`) will work just fine
         -- tsserver = {},
         --
-        jdtls = {
-          cmd = {
-            'java',
-            '-declipse.application=org.eclipse.jdt.ls.core.id1',
-            '-dosgi.bundles.defaultstartlevel=4',
-            '-declipse.product=org.eclipse.jdt.ls.core.product',
-            '-dlog.protocol=true',
-            '-dlog.level=all',
-            '-xmx2048m',
-            '--add-modules=all-system',
-            '--add-opens',
-            'java.base/java.util=all-unnamed',
-            '--add-opens',
-            'java.base/java.lang=all-unnamed',
-            '-javaagent:' .. require('mason-registry').get_package('jdtls'):get_install_path() .. '/lombok.jar',
-            '-jar',
-            '/users/lmpinto/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_1.6.800.v20240330-1250.jar',
-            '-configuration',
-            '/users/lmpinto/.local/share/nvim/mason/packages/jdtls/config_mac',
-            '-data',
-            '/users/lmpinto/.local/share/eclipse/report-creator',
-          },
-          root_dir = vim.fs.dirname(vim.fs.find({ 'gradlew', '.git', 'mvnw' }, { upward = true })[1]),
-        },
+        jdtls = { cmd = { 'jdtls' } },
 
         lua_ls = {
           -- cmd = {...},
@@ -670,7 +647,7 @@ require('lazy').setup({
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { --c = true,
           cpp = true,
-          java = true,
+          -- java = true,
         }
         return {
           timeout_ms = 500,
